@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/assets/bootstrap/v5.3.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.3/css/all.css">
+    <link rel="stylesheet" href="/assets/css/custom-style.css">
+    <script src="/assets/jquery/jquery-3.7.1.min.js"></script>
+    <script src="/assets/bootstrap/v5.3.2/js/bootstrap.bundle.min.js"></script>
+    <title>List of customers</title>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <nav class="navbar bg-body-tertiary">
+                <div class="container-fluid">
+                    <a class="navbar-brand">List of customers</a>
+                    <div class="d-flex" style="gap: 10px;">
+                        <button class="btn btn-outline-light" type="button">
+                            <i class="fas fa-history"></i>
+                            Transfer histories
+                        </button>
+                        <button type="button" class="btn btn-outline-light" data-bs-toggle="modal"
+                            data-bs-target="#modalCreate">
+                            <i class="far fa-plus-square"></i>
+                            Add new customer
+                        </button>
+                    </div>
+                </div>
+            </nav>
+        </header>
+
+        <div class="content">
+            <table id="tbCustomer" class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>FullName</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Address</th>
+                        <th>Balance</th>
+                        <th colspan="5">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        <div id="liveToast" class="toast align-items-center text-bg-primary border-0" role="alert" aria-live="assertive"
+            aria-atomic="true">
+            <div class="d-flex">
+                <div id="toast-body" class="toast-body">
+                </div>
+                <button type="button" id="btnCloseToast" class="btn-close btn-close-white me-2 m-auto"
+                    data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Create -->
+    <div class="modal fade" id="modalCreate" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5">Modal create</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form method="post">
+                        <div class="row mb-3 mt-3">
+                            <div class="col-lg-6">
+                                <label for="fullNameCre" class="form-label">Full Name</label>
+                                <input type="text" class="form-control" id="fullNameCre">
+                            </div>
+                            <div class="col-lg-6">
+                                <label for="emailCre" class="form-label">Email</label>
+                                <input type="email" class="form-control" id="emailCre">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-lg-6">
+                                <label for="phoneCre" class="form-label">Phone</label>
+                                <input type="tel" class="form-control" id="phoneCre">
+                            </div>
+                            <div class="col-lg-6">
+                                <label for="addressCre" class="form-label">Address</label>
+                                <input type="text" class="form-control" id="addressCre">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-outline-success" id="btnCreate">
+                        <i class="fas fa-plus"></i>
+                        Create
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Update -->
+    <div class="modal fade" id="modalUpdate" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5">Modal update</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form method="post">
+                        <div class="row mb-3 mt-3">
+                            <div class="col-lg-6">
+                                <label for="fullNameUp" class="form-label">Full Name</label>
+                                <input type="text" class="form-control" id="fullNameUp">
+                            </div>
+                            <div class="col-lg-6">
+                                <label for="emailUp" class="form-label">Email</label>
+                                <input type="email" class="form-control" id="emailUp">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-lg-6">
+                                <label for="phoneUp" class="form-label">Phone</label>
+                                <input type="tel" class="form-control" id="phoneUp">
+                            </div>
+                            <div class="col-lg-6">
+                                <label for="addressUp" class="form-label">Address</label>
+                                <input type="text" class="form-control" id="addressUp">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-outline-secondary" id="btnUpdate">
+                        <i class="fas fa-pencil"></i>
+                        Update
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Deposit -->
+    <div class="modal fade" id="modalDeposit" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5">Modal Deposit</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <!-- Modal Body -->
+                <div class="modal-body">
+                    <form method="post"">
+                        <div class=" row mb-3 mt-3">
+                        <div class="col-lg-6">
+                            <label for="idDep" class="form-label">Customer ID</label>
+                            <input type="number" class="form-control" id="idDep" readonly="readonly">
+                        </div>
+                        <div class="col-lg-6">
+                            <label for="fullNameDep" class="form-label">Full Name</label>
+                            <input type="text" class="form-control" id="fullNameDep" readonly="readonly">
+                        </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-lg-6">
+                        <label for="balanceDep" class="form-label">Current Balance ($)</label>
+                        <input type="number" class="form-control" id="balanceDep" readonly="readonly">
+                    </div>
+                    <div class="col-lg-6">
+                        <label for="transactionAmountDep" class="form-label">Transaction Amount ($)</label>
+                        <input type="number" class="form-control" id="transactionAmountDep" min="0">
+                    </div>
+                </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-outline-secondary" id="btnDeposit">
+                    <i class="fas fa-plus"></i>
+                    Deposit
+                </button>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <!-- Modal Withdaw -->
+    <div class="modal fade" id="modalWithdraw" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5">Modal Withdraw</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <!-- Modal Body -->
+                <div class="modal-body">
+                    <form method="post">
+                        <div class="row mb-3 mt-3">
+                            <div class="col-lg-6">
+                                <label for="id" class="form-label">Customer ID</label>
+                                <input type="number" class="form-control" id="id" readonly="readonly">
+                            </div>
+                            <div class="col-lg-6">
+                                <label for="fullName" class="form-label">Full Name</label>
+                                <input type="text" class="form-control" id="fullName" readonly="readonly">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-lg-6">
+                                <label for="balance" class="form-label">Current Balance ($)</label>
+                                <input type="number" class="form-control" id="balance" readonly="readonly">
+                            </div>
+                            <div class="col-lg-6">
+                                <label for="transactionAmount" class="form-label">Transaction Amount ($)</label>
+                                <input type="number" class="form-control" id="transactionAmount" min="0">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-outline-secondary" id="btnWithdraw">
+                        <i class="fas fa-minus"></i>
+                        Withdraw
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Transfer -->
+    <div class="modal fade" id="modalTransfer" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog modal-xl" role="document" style="top: 100px;">
+            <div class="modal-content">
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Deposit</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <!-- Modal Body -->
+                <div class="modal-body">
+                    <form method="post">
+                        <div class="row mb-3 mt-3">
+                            <div class="col-lg-3">
+                                <label for="id" class="form-label">Sender ID</label>
+                                <input type="number" class="form-control" id="id" readonly="readonly">
+                            </div>
+                            <div class="col-lg-3">
+                                <label for="fullName" class="form-label">Sender Name</label>
+                                <input type="text" class="form-control" id="fullName" readonly="readonly">
+                            </div>
+                            <div class="col-lg-3">
+                                <label for="email" class="form-label">Email</label>
+                                <input type="email" class="form-control" id="email" readonly="readonly">
+                            </div>
+                            <div class="col-lg-3">
+                                <label for="balance" class="form-label">Sender balance</label>
+                                <input type="number" class="form-control" id="balance" readonly="readonly">
+                            </div>
+                        </div>
+                        <div class="row mb-3 mt-3">
+                            <div class="col-lg-3">
+                                <label for="recipientName" class="form-label">Recipient Name</label>
+                                <select class="form-control" th:field="*{recipient.id}" id="recipientName">
+                                    <option th:each="item : ${recipients}" th:value="${item.id}"
+                                        th:text="${'(' + item.id + ') ' + item.fullName}"></option>
+                                </select>
+                            </div>
+                            <div class="col-lg-3">
+                                <label for="transferAmount" class="form-label">Transfer Amount ($)</label>
+                                <input type="number" class="form-control" id="transferAmount" min="0">
+                            </div>
+                            <div class="col-lg-3">
+                                <label for="fees" class="form-label">Fees (%)</label>
+                                <input type="number" class="form-control" id="fees" readonly="readonly" value="10">
+                            </div>
+                            <div class="col-lg-3">
+                                <label for="total" class="form-label">Total Amount Of Transaction ($)</label>
+                                <input type="number" class="form-control" id="total" readonly="readonly" value="0">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-outline-secondary" id="btnTransfer">
+                        <i class="fa-solid fa-arrow-right-arrow-left"></i>
+                        Transfer
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+
+        const bodyCustomer = document.querySelector('#tbCustomer tbody')
+        const btnCreate = document.getElementById('btnCreate');
+        const btnUpdate = document.getElementById('btnUpdate');
+        const btnDeposit = document.getElementById('btnDeposit');
+        const btnWithdraw = document.getElementById('btnWithdraw');
+        const btnTransfer = document.getElementById('btnTransfer');
+
+        const toastLive = document.getElementById('liveToast')
+        const toastBody = document.getElementById('toast-body')
+        const btnCloseToast = document.getElementById('btnCloseToast')
+
+        const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLive)
+
+
+        let customerId = 0;
+
+        async function fetchALlcustomer() {
+            const response = await fetch("http://localhost:3300/customers");
+            const customers = await response.json();
+            return customers
+        }
+
+        const getAllCustomer = async () => {
+            const customers = await fetchALlcustomer();
+            console.log(customers);
+
+            customers.forEach(item => {
+                const str = rendercustomer(item)
+                bodyCustomer.innerHTML += str;
+            });
+
+            const btnEditElems = document.querySelectorAll('.edit')
+
+            btnEditElems.forEach(item => {
+                item.addEventListener('click', async () => {
+                    // const id = item.id.replace('data_', '')
+                    customerId = item.getAttribute('data-id')
+
+                    const customer = await getcustomerById(customerId);
+                    // console.log(customer);
+
+                    openModal('modalUpdate')
+
+                    document.getElementById('fullNameUp').value = customer.fullName
+                    document.getElementById('emailUp').value = customer.email
+                    document.getElementById('phoneUp').value = customer.phone
+                    document.getElementById('addressUp').value = customer.address
+
+                })
+            })
+
+            const btnDepositElems = document.querySelectorAll('.deposit');
+            btnDepositElems.forEach(item => {
+                item.addEventListener('click', async () => {
+                    customerId = item.getAttribute('data-id');
+                    const customer = await getcustomerById(customerId);
+                    openModal('modalDeposit');
+                    document.getElementById('idDep').value = customer.id;
+                    document.getElementById('fullNameDep').value = customer.fullName;
+                    document.getElementById('balanceDep').value = parseInt(customer.balance);
+                })
+            })
+            const btnWithdrawElems = document.querySelectorAll('.withdraw');
+            btnWithdrawElems.forEach(item => {
+                item.addEventListener('click', async () => {
+                    customerId = item.getAttribute('data-id');
+                    const customer = await getcustomerById(customerId);
+                    openModal('modalWithdraw');
+                    document.getElementById('fullNameWit').value = customer.fullName;
+                    document.getElementById('emailWit').value = customer.email;
+                    document.getElementById('balanceWit').value = customer.balance;
+                })
+            })
+        }
+
+        const fetchDepositcustomer = async (customerId, obj) => {
+            const response = await fetch("http://localhost:3300/customer/" + customerId, {
+                method: 'PATCH',
+                headers: {
+                    "Content-type": "application/json; charset=UTF-8"
+                },
+                body: JSON.stringify(obj)
+            });
+            const customer = await response.json();
+            return customer;
+        }
+
+        const fetchWithdrawcustomer = async (customerId, obj) => {
+            const response = await fetch("http://localhost:3300/customer/" + customerId, {
+                method: 'PATCH',
+                headers: {
+                    "Content-type": "application/json; charset=UTF-8"
+                },
+                body: JSON.stringify(obj)
+            });
+            const customer = await response.json();
+            return customer;
+        }
+
+        const getcustomerById = async (customerId) => {
+            const response = await fetch("http://localhost:3300/customers/" + customerId);
+            const customer = await response.json();
+            return customer
+        }
+
+        const fetchUpdatecustomer = async (customerId, obj) => {
+            const response = await fetch("http://localhost:3300/customers/" + customerId, {
+                method: 'PATCH',
+                headers: {
+                    "Content-type": "application/json; charset=UTF-8"
+                },
+                body: JSON.stringify(obj)
+            });
+            const customer = await response.json();
+            return customer
+        }
+
+        const rendercustomer = (obj) => {
+            return `
+                <tr id="tr_${obj.id}">
+                    <td>${obj.id}</td>
+                    <td>${obj.fullName}</td>
+                    <td>${obj.email}</td>
+                    <td>${obj.phone}</td>
+                    <td>${obj.address}</td>
+                    <td>${obj.balance}</td>
+                    <td>
+                        <button class="btn btn-outline-secondary edit" id="data_${obj.id}" data-id="${obj.id}">
+                            <i class="far fa-edit"></i>
+                        </button>
+                    </td>
+                    <td>
+                        <button class="btn btn-outline-success deposit" data-id="${obj.id}">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </td>
+                    <td>
+                        <button class="btn btn-outline-warning withdraw" data-id="${obj.id}">
+                            <i class="fas fa-minus"></i>
+                        </button>
+                    </td>
+                    <td>
+                        <button class="btn btn-outline-primary transfer" data-id="${obj.id}">
+                            <i class="fas fa-exchange-alt"></i>
+                        </button>
+                    </td>
+                    <td>
+                        <button class="btn btn-outline-danger delete" data-id="${obj.id}">
+                            <i class="fas fa-ban"></i>
+                        </button>
+                    </td>
+                </tr>
+            `
+        }
+
+        btnCreate.addEventListener('click', async () => {
+            const fullName = document.getElementById('fullNameCre').value
+            const email = document.getElementById('emailCre').value
+            const phone = document.getElementById('phoneCre').value
+            const address = document.getElementById('addressCre').value
+            const balance = 0
+            const deleted = 0
+
+            const obj = {
+                fullName,
+                email,
+                phone,
+                address,
+                balance,
+                deleted
+            }
+
+            const rawResponse = await fetch("http://localhost:3300/customers", {
+                method: 'POST',
+                headers: {
+                    "Content-type": "application/json; charset=UTF-8"
+                },
+                body: JSON.stringify(obj)
+            });
+
+            const content = await rawResponse.json();
+
+            const str = rendercustomer(content)
+            bodyCustomer.innerHTML += str;
+
+            closeModal('modalCreate')
+
+        })
+
+        btnUpdate.addEventListener('click', async () => {
+            const fullName = document.getElementById('fullNameUp').value
+            const email = document.getElementById('emailUp').value
+            const phone = document.getElementById('phoneUp').value
+            const address = document.getElementById('addressUp').value
+
+            const obj = {
+                fullName,
+                email,
+                phone,
+                address
+            }
+
+            const content = await fetchUpdatecustomer(customerId, obj)
+
+            const updateRow = document.getElementById('tr_' + customerId)
+            const str = rendercustomer(content)
+            updateRow.innerHTML = str
+
+            closeModal('modalUpdate')
+
+            toastBody.innerText = 'Cập nhật thông tin thành công'
+            toastBootstrap.show()
+
+            setTimeout(() => {
+                btnCloseToast.click()
+            }, 2500);
+        })
+
+        btnDeposit.addEventListener('click', async () => {
+            const transaction = parseFloat(document.getElementById('transactionAmountDep').value);
+            const currentBalance = parseFloat(document.getElementById('balanceDep').value);
+
+            if (isNaN(transaction) || isNaN(currentBalance) || transaction < 0 || transaction > 10000000) {
+                toastBody.innerText = 'Số tiền giao dịch không hợp lệ hoặc vượt quá giới hạn (0 - 10,000,000)';
+                toastBootstrap.show();
+                return;
+            }
+
+            const newBalance = parseFloat(currentBalance + transaction);
+
+            const obj = {
+                fullName: document.getElementById('fullName').value,
+                balance: newBalance,
+                transaction: transaction
+            };
+
+            const content = await fetchDepositPerson(personId, obj);
+            const updateRow = document.getElementById('tr_' + personId);
+            const str = renderPerson(content);
+            updateRow.innerHTML = str;
+
+            closeModal('modalDeposit');
+            toastBody.innerText = 'Nạp tiền thành công'
+            toastBootstrap.show()
+
+            setTimeout(() => {
+                btnCloseToast.click()
+            }, 2500);
+        })
+
+        function openModal(elem) {
+            let el = document.getElementById(elem);
+            new bootstrap.Modal(el).show();
+        }
+
+        function closeModal(elem) {
+            document.getElementById(elem).style.display = "none"
+            document.getElementById(elem).classList.remove("show")
+            document.querySelector('.modal-backdrop').remove();
+            document.querySelector('body').setAttribute('style', 'overflow: none')
+        }
+
+
+        getAllCustomer()
+
+        btnDeposit.addEventListener('click', async () => {
+            const fullName = document.getElementById('fullNameDep').value
+            const balance = document.getElementById('balanceDep').value + document.getElementById('transactionAmountDep').value
+
+            const obj = {
+                fullName,
+                balance
+            }
+
+            const content = await fetchUpdatecustomer(customerId, obj)
+
+            const updateRow = document.getElementById('tr_' + customerId)
+            const str = rendercustomer(content)
+            updateRow.innerHTML = str
+
+            closeModal('modalDeposit')
+
+            toastBody.innerText = 'Nạp tiền thành công'
+            toastBootstrap.show()
+
+            setTimeout(() => {
+                btnCloseToast.click()
+            }, 2500);
+        });
+
+    </script>
+</body>
+
+</html>
